@@ -1,0 +1,21 @@
+name: Portal
+description: Fast easy portals
+main: me.sniperzciinema.portal.Main
+version: 0.3
+author: SniperzCiinema
+
+commands:
+   portals:
+      description: Spawn a portal
+      usage: /<command>
+      aliases: [p]
+
+permissions:
+   Portals.*:
+      default: op
+      children:
+         Portals.Create: true
+         Portals.Use: true
+         Portals.Spawn: true
+   Portals.Use:
+      default: true
