@@ -1,6 +1,7 @@
 
 package me.sniperzciinema.portal;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
@@ -14,31 +15,44 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
-public class Main extends JavaPlugin {
+public class PortablePortals extends JavaPlugin {
 
 	public static Plugin me;
-	private Listeners listeners = new Listeners(this);
+	public ItemStack portal;
 
 	public void onEnable() {
 		me = this;
 
+		PluginManager pm = getServer().getPluginManager();
+		pm = getServer().getPluginManager();
+		try
+		{
+			Metrics metrics = new Metrics(this);
+			metrics.start();
+			System.out.println("Metrics was started!");
+		} catch (IOException e)
+		{
+			System.out.println("Metrics was unable to start...");
+		}
 		// Register the event listener
-		getServer().getPluginManager().registerEvents(listeners, this);
+		pm.registerEvents(new PortalsListeners(), this);
 
 		// Portal Item
 
-		ItemStack portal = new ItemStack(Material.NETHER_STAR, 1);
+		portal = new ItemStack(Material.NETHER_STAR, 1);
 		ItemMeta im = portal.getItemMeta();
-		im.setDisplayName(ChatColor.RED + "Portal");
-		ArrayList<String> lore = new ArrayList<String>();
-		lore.add(ChatColor.GREEN + "Left Click To Set");
-		lore.add(ChatColor.RED + "Right Click To Open");
-		lore.add(ChatColor.GRAY + "------------");
-		lore.add(ChatColor.YELLOW + "Target: None");
-		im.setLore(lore);
+		im.setDisplayName(ChatColor.DARK_GRAY + "Portal");
+		ArrayList<String> lores = new ArrayList<String>();
+		lores.add(ChatColor.DARK_AQUA + "Left Click To Set");
+		lores.add(ChatColor.GOLD + "Right Click To Open");
+		lores.add("" + ChatColor.WHITE + ChatColor.ITALIC + "------------");
+		lores.add(ChatColor.YELLOW + "Target: None");
+		im.setLore(lores);
+
 		portal.setItemMeta(im);
 
 		ShapedRecipe portalCube = new ShapedRecipe(portal).shape(new String[] { "*#*", "#%#", "*#*" }).setIngredient('#', Material.EMERALD).setIngredient('*', Material.OBSIDIAN).setIngredient('%', Material.NETHER_STAR);
@@ -53,11 +67,16 @@ public class Main extends JavaPlugin {
 			public void run() {
 				for (Player player : Bukkit.getOnlinePlayers())
 				{
-					Location loc = PortalManager.getRoundedLocation(player.getLocation());
-					if (player.hasPermission("Portals.Use"))
-						for (Portal portal : PortalManager.getPortals())
-							if (loc.getBlockX() == portal.getLocation().getBlockX() && loc.getBlockY() == portal.getLocation().getBlockY() && loc.getBlockZ() == portal.getLocation().getBlockZ())
-								player.teleport(portal.getTarget());
+					if (player.hasPermission("PortablePortals.Use"))
+					{
+						if (!PortalManager.getPortals().isEmpty())
+						{
+							Location loc = PortalManager.getRoundedLocation(player.getLocation());
+							for (Portal portal : PortalManager.getPortals())
+								if (loc.getBlockX() == portal.getLocation().getBlockX() && loc.getBlockY() == portal.getLocation().getBlockY() && loc.getBlockZ() == portal.getLocation().getBlockZ())
+									player.teleport(portal.getTarget());
+						}
+					}
 				}
 			}
 		}, 100L, 20);
@@ -70,23 +89,12 @@ public class Main extends JavaPlugin {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-		if (cmd.getName().equalsIgnoreCase("Portals"))
+		if (cmd.getName().equalsIgnoreCase("PPortals"))
 		{
-			if (sender instanceof Player && sender.hasPermission("Portals.Spawn"))
+			if (sender instanceof Player && sender.hasPermission("PortablePortals.Spawn"))
 			{
 				// Define "player" as the one who sent the command
 				Player player = (Player) sender;
-
-				ItemStack portal = new ItemStack(Material.NETHER_STAR, 1);
-				ItemMeta im = portal.getItemMeta();
-				im.setDisplayName(ChatColor.RED + "Portal");
-				ArrayList<String> lore = new ArrayList<String>();
-				lore.add(ChatColor.GREEN + "Left Click To Set");
-				lore.add(ChatColor.RED + "Right Click To Open");
-				lore.add("" + ChatColor.GRAY + RandomChatColor.getFormat() + "------------");
-				lore.add(RandomChatColor.getColor() + "Target: None");
-				im.setLore(lore);
-				portal.setItemMeta(im);
 				player.getInventory().addItem(portal);
 			}
 

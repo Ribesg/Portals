@@ -1,21 +1,22 @@
-name: Portal
-description: Fast easy portals
-main: me.sniperzciinema.portal.Main
+name: Portable Portals
+description: Fast Easy Portable Portals
+main: me.sniperzciinema.portal.PortablePortals
 version: 0.3
 author: SniperzCiinema
 
 commands:
-   portals:
+   pportals:
       description: Spawn a portal
       usage: /<command>
-      aliases: [p]
+      aliases: [p, portableportals, portal, pportal]
 
 permissions:
-   Portals.*:
+   PortablePortals.*:
       default: op
       children:
-         Portals.Create: true
-         Portals.Use: true
-         Portals.Spawn: true
-   Portals.Use:
+         PortablePortals.Use: true
+         PortablePortals.Spawn: true
+   PortablePortals.Use:
+      default: true
+   PortablePortals.Create:
       default: true
