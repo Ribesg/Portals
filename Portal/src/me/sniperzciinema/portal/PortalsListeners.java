@@ -3,6 +3,9 @@ package me.sniperzciinema.portal;
 
 import java.util.ArrayList;
 
+import me.sniperzciinema.portal.PortalHandlers.Portal;
+import me.sniperzciinema.portal.PortalHandlers.PortalManager;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -122,7 +125,7 @@ public class PortalsListeners implements Listener {
 												portal.removePortal();
 												PortalManager.delPortal(portal);
 											}
-										}, 200);
+										}, PortablePortals.me.getConfig().getInt("Portals.Stay Open Time")*20);
 
 									}
 								}

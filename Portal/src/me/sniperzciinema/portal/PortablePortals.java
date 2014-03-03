@@ -4,6 +4,11 @@ package me.sniperzciinema.portal;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import me.sniperzciinema.portal.PortalHandlers.Portal;
+import me.sniperzciinema.portal.PortalHandlers.PortalManager;
+import me.sniperzciinema.portal.Util.Metrics;
+import me.sniperzciinema.portal.Util.Updater;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -26,6 +31,12 @@ public class PortablePortals extends JavaPlugin {
 
 	public void onEnable() {
 		me = this;
+		boolean update = false;
+		@SuppressWarnings("unused")
+		String name = "";
+		Updater updater;
+		getConfig().options().copyDefaults(true);
+		saveConfig();
 
 		PluginManager pm = getServer().getPluginManager();
 		pm = getServer().getPluginManager();
@@ -41,8 +52,25 @@ public class PortablePortals extends JavaPlugin {
 		// Register the event listener
 		pm.registerEvents(new PortalsListeners(), this);
 
-		// Portal Item
 
+		if (getConfig().getBoolean("Download new updates"))
+		{
+			try
+			{
+				updater = new Updater(this, 65787, getFile(),
+						Updater.UpdateType.NO_DOWNLOAD, false);
+
+				update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
+				name = updater.getLatestName();
+
+			} catch (Exception ex)
+			{
+				System.out.println("The auto-updater tried to contact dev.bukkit.org, but was unsuccessful.");
+			}
+			if (update)
+				updater = new Updater(this, 75241, getFile(),
+						Updater.UpdateType.NO_VERSION_CHECK, false);
+		}
 		portal = new ItemStack(Material.NETHER_STAR, 1);
 		ItemMeta im = portal.getItemMeta();
 		im.setDisplayName(ChatColor.DARK_GRAY + "Portal");
@@ -79,7 +107,7 @@ public class PortablePortals extends JavaPlugin {
 					}
 				}
 			}
-		}, 100L, 20);
+		}, getConfig().getInt("Check If In Portal Refresh Time")*20, 20);
 
 	}
 

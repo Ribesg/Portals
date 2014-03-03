@@ -1,5 +1,5 @@
 
-package me.sniperzciinema.portal;
+package me.sniperzciinema.portal.PortalHandlers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
@@ -7,7 +7,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import me.sniperzciinema.portal.Direction;
+
+import me.sniperzciinema.portal.PortablePortals;
+import me.sniperzciinema.portal.Util.Direction;
 
 
 public class Portal {

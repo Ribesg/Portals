@@ -1,5 +1,5 @@
 
-package me.sniperzciinema.portal;
+package me.sniperzciinema.portal.Util;
 
 import org.bukkit.entity.Player;
 

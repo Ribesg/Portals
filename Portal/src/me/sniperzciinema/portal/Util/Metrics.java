@@ -1,5 +1,5 @@
 
-package me.sniperzciinema.portal;
+package me.sniperzciinema.portal.Util;
 
 /* Copyright 2011-2013 Tyler Blair. All rights reserved.
  * 

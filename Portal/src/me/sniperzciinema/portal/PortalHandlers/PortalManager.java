@@ -1,5 +1,5 @@
 
-package me.sniperzciinema.portal;
+package me.sniperzciinema.portal.PortalHandlers;
 
 import java.util.ArrayList;
 
