@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import me.sniperzciinema.portal.PortalHandlers.Portal;
 import me.sniperzciinema.portal.PortalHandlers.PortalManager;
 import me.sniperzciinema.portal.Util.Metrics;
+import me.sniperzciinema.portal.Util.Msgs;
+import me.sniperzciinema.portal.Util.Settings;
 import me.sniperzciinema.portal.Util.Updater;
 
 import org.bukkit.Bukkit;
@@ -52,7 +54,6 @@ public class PortablePortals extends JavaPlugin {
 		// Register the event listener
 		pm.registerEvents(new PortalsListeners(), this);
 
-
 		if (getConfig().getBoolean("Download new updates"))
 		{
 			try
@@ -73,12 +74,12 @@ public class PortablePortals extends JavaPlugin {
 		}
 		portal = new ItemStack(Material.NETHER_STAR, 1);
 		ItemMeta im = portal.getItemMeta();
-		im.setDisplayName(ChatColor.DARK_GRAY + "Portal");
+		im.setDisplayName(Msgs.Portals_Title.getString());
 		ArrayList<String> lores = new ArrayList<String>();
-		lores.add(ChatColor.DARK_AQUA + "Left Click To Set");
-		lores.add(ChatColor.GOLD + "Right Click To Open");
+		lores.add(Msgs.Portals_LeftClickTo.getString());
+		lores.add(Msgs.Portals_RightClickTo.getString());
 		lores.add("" + ChatColor.WHITE + ChatColor.ITALIC + "------------");
-		lores.add(ChatColor.YELLOW + "Target: None");
+		lores.add(Msgs.Portals_Target.getString("None"));
 		im.setLore(lores);
 
 		portal.setItemMeta(im);
@@ -107,7 +108,7 @@ public class PortablePortals extends JavaPlugin {
 					}
 				}
 			}
-		}, getConfig().getInt("Check If In Portal Refresh Time")*20, 20);
+		}, Settings.portalRefreshTime(), 20);
 
 	}
 

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 import me.sniperzciinema.portal.PortalHandlers.Portal;
 import me.sniperzciinema.portal.PortalHandlers.PortalManager;
+import me.sniperzciinema.portal.Util.Msgs;
+import me.sniperzciinema.portal.Util.Settings;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -34,11 +36,11 @@ public class PortalsListeners implements Listener {
 				if (e.getItem().getItemMeta().hasDisplayName())
 					if (e.getPlayer().hasPermission("PortablePortals.Create"))
 					{
-						if (e.getItem().getItemMeta().getDisplayName().contains("Portal"))
+						if (e.getItem().getItemMeta().getDisplayName().contains(ChatColor.stripColor(Msgs.Portals_Title.getString())))
 						{
 
 							final Player player = e.getPlayer();
-							
+
 							// Setting location
 							if (e.getAction() == Action.LEFT_CLICK_BLOCK)
 							{
@@ -47,31 +49,31 @@ public class PortalsListeners implements Listener {
 								// item lore
 								Location loc = e.getClickedBlock().getLocation().clone().add(0.0, 1.0, 0.0);
 								String locationString = PortalManager.getLocationToString(loc);
-								
+
 								ItemStack portal = e.getItem().clone();
 								portal.setAmount(1);
-								
+
 								ItemMeta im = portal.getItemMeta();
-								im.setDisplayName(ChatColor.DARK_GRAY + "Portal");
+								im.setDisplayName(Msgs.Portals_Title.getString());
 								ArrayList<String> lores = new ArrayList<String>();
-								lores.add(ChatColor.DARK_AQUA + "Left Click To Set");
-								lores.add(ChatColor.GOLD + "Right Click To Open");
+								lores.add(Msgs.Portals_LeftClickTo.getString());
+								lores.add(Msgs.Portals_RightClickTo.getString());
 								lores.add("" + ChatColor.WHITE + ChatColor.ITALIC + "------------");
-								lores.add(ChatColor.YELLOW + "Target: " + locationString);
+								lores.add(Msgs.Portals_Target.getString(locationString));
 								im.setLore(lores);
 								portal.setItemMeta(im);
-								
+
 								if (e.getItem().getAmount() != 1)
 									e.getItem().setAmount(e.getItem().getAmount() - 1);
 								else
 									player.getInventory().remove(e.getItem());
-								
+
 								player.getInventory().addItem(portal);
 								player.updateInventory();
-								
+
 								// Tell the player what just happened
-								player.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.ITALIC + "The location of your portal has been set.");
-							
+								player.sendMessage(Msgs.Portals_TargetSet.getString());
+
 							} else if (e.getAction() == Action.RIGHT_CLICK_BLOCK)
 							{
 								// Save the location of the target
@@ -80,8 +82,11 @@ public class PortalsListeners implements Listener {
 									Location target = PortalManager.getTargetFromItem(e.getItem());
 
 									if (target == null)
-										target = new Location(
-												player.getWorld(), 0, 0, 0);
+										if (Settings.doesPortalWithoutTargetKill())
+											target = new Location(
+													player.getWorld(), 0, 0, 0);
+										else
+											target = e.getPlayer().getWorld().getSpawnLocation();
 
 									// Remove portal from hand
 									final Portal portal = PortalManager.addPortal(e.getClickedBlock().getLocation(), target, e.getItem(), player);
@@ -90,14 +95,14 @@ public class PortalsListeners implements Listener {
 										e.getItem().setAmount(e.getItem().getAmount() - 1);
 									else
 										player.getInventory().remove(e.getItem());
-									
+
 									player.updateInventory();
 
 									player.getWorld().createExplosion(portal.getLocation(), 0.0F, false);
 
 									if (!portal.canCreatePortal())
 									{
-										player.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.ITALIC + "The portal isn't balanced in this location.");
+										player.sendMessage(Msgs.Portals_NotEnoughRoom.getString());
 
 										player.getInventory().addItem(portal.getItem());
 
@@ -109,7 +114,7 @@ public class PortalsListeners implements Listener {
 
 										portal.createPortal();
 
-										player.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.ITALIC + "Your portal has been opened.");
+										player.sendMessage(Msgs.Portals_PortalOpened.getString());
 
 										portal.playEffect();
 
@@ -121,11 +126,11 @@ public class PortalsListeners implements Listener {
 											public void run() {
 												player.getInventory().addItem(portal.getItem());
 
-												player.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.ITALIC + "Your portal has been closed.");
+												player.sendMessage(Msgs.Portals_PortalClosed.getString());
 												portal.removePortal();
 												PortalManager.delPortal(portal);
 											}
-										}, PortablePortals.me.getConfig().getInt("Portals.Stay Open Time")*20);
+										}, Settings.stayOpenTime());
 
 									}
 								}

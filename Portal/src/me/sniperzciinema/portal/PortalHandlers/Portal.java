@@ -1,15 +1,15 @@
 
 package me.sniperzciinema.portal.PortalHandlers;
 
+import me.sniperzciinema.portal.PortablePortals;
+import me.sniperzciinema.portal.Util.Direction;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import me.sniperzciinema.portal.PortablePortals;
-import me.sniperzciinema.portal.Util.Direction;
 
 
 public class Portal {
@@ -192,21 +192,21 @@ public class Portal {
 										if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 2, (int) location2.getZ()).getType() == Material.AIR)
 											if (location2.getWorld().getBlockAt((int) location2.getX() + 1, (int) location2.getY() + 2, (int) location2.getZ()).getType() == Material.AIR)
 												return true;
-		}
-		else{
-			if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ()-1).getType() == Material.AIR)
+		} else
+		{
+			if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ() - 1).getType() == Material.AIR)
 				if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ()).getType() == Material.AIR)
-					if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ()+1).getType() == Material.AIR)
+					if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ() + 1).getType() == Material.AIR)
 
-						if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 1, (int) location2.getZ()-1).getType() == Material.AIR)
+						if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 1, (int) location2.getZ() - 1).getType() == Material.AIR)
 							if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 1, (int) location2.getZ()).getType() == Material.AIR)
-								if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 1, (int) location2.getZ()+1).getType() == Material.AIR)
+								if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 1, (int) location2.getZ() + 1).getType() == Material.AIR)
 
-									if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 2, (int) location2.getZ()-1).getType() == Material.AIR)
+									if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 2, (int) location2.getZ() - 1).getType() == Material.AIR)
 										if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 2, (int) location2.getZ()).getType() == Material.AIR)
-											if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 2, (int) location2.getZ()+1).getType() == Material.AIR)
+											if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 2, (int) location2.getZ() + 1).getType() == Material.AIR)
 												return true;
-					
+
 		}
 		return false;
 	}
