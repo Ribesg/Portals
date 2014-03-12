@@ -13,7 +13,7 @@ public enum Msgs
 	Portals_Target("Portals.Target", "<target>"),
 	Portals_NotEnoughRoom("Action.Not Enough Room", ""),
 	Portals_PortalOpened("Action.Portal Opened", ""),
-	Portals_PortalClosed("Action.Portal closeed", ""),
+	Portals_PortalClosed("Action.Portal Closed", ""),
 	Portals_TargetSet("Action.Target Set", "");
 
 	private String string;

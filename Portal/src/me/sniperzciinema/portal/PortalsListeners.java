@@ -20,12 +20,20 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 
 public class PortalsListeners implements Listener {
 
+	public PortablePortals plugin;
+
+	public PortalsListeners(PortablePortals instance)
+	{
+		plugin = instance;
+	}
+	
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerUsePortal(final PlayerInteractEvent e) {
@@ -140,6 +148,14 @@ public class PortalsListeners implements Listener {
 							e.setCancelled(true);
 						}
 					}
+	}
+
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		if (event.getPlayer().isOp() && plugin.update)
+		{
+			System.out.println("Theres a new update for Portable Plugins(v" + plugin.name + ").");
+		}
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)

@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import me.sniperzciinema.portal.PortalHandlers.Portal;
+import me.sniperzciinema.portal.PortalsListeners;
 import me.sniperzciinema.portal.PortalHandlers.PortalManager;
+import me.sniperzciinema.portal.Util.Files;
 import me.sniperzciinema.portal.Util.Metrics;
 import me.sniperzciinema.portal.Util.Msgs;
 import me.sniperzciinema.portal.Util.Settings;
@@ -30,14 +32,15 @@ public class PortablePortals extends JavaPlugin {
 
 	public static Plugin me;
 	public ItemStack portal;
+	public boolean update = false;
+	public String name = "";
 
 	public void onEnable() {
 		me = this;
-		boolean update = false;
-		@SuppressWarnings("unused")
-		String name = "";
 		Updater updater;
 		getConfig().options().copyDefaults(true);
+		Files.getMessages().options().copyDefaults(true);
+		Files.saveMessages();
 		saveConfig();
 
 		PluginManager pm = getServer().getPluginManager();
@@ -52,9 +55,9 @@ public class PortablePortals extends JavaPlugin {
 			System.out.println("Metrics was unable to start...");
 		}
 		// Register the event listener
-		pm.registerEvents(new PortalsListeners(), this);
+		pm.registerEvents(new PortalsListeners(this), this);
 
-		if (getConfig().getBoolean("Download new updates"))
+		if (getConfig().getBoolean("Check for new updates"))
 		{
 			try
 			{
@@ -68,9 +71,6 @@ public class PortablePortals extends JavaPlugin {
 			{
 				System.out.println("The auto-updater tried to contact dev.bukkit.org, but was unsuccessful.");
 			}
-			if (update)
-				updater = new Updater(this, 75241, getFile(),
-						Updater.UpdateType.NO_VERSION_CHECK, false);
 		}
 		portal = new ItemStack(Material.NETHER_STAR, 1);
 		ItemMeta im = portal.getItemMeta();
@@ -126,6 +126,12 @@ public class PortablePortals extends JavaPlugin {
 				Player player = (Player) sender;
 				player.getInventory().addItem(portal);
 			}
+
+		}else if (cmd.getName().equalsIgnoreCase("PReload"))
+		{
+			if (sender instanceof Player && ((Player)sender).isOp())
+				Files.reloadAll();
+			
 
 		}
 		return true;

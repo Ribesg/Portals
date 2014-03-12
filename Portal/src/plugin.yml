@@ -9,6 +9,10 @@ commands:
       description: Spawn a portal
       usage: /<command>
       aliases: [p, portableportals, portal, pportal]
+   preload:
+      description: Reload files
+      usage: /<command>
+      aliases: [pr, portableportalsreload, portalreload, pportalreload]
 
 permissions:
    PortablePortals.*:
