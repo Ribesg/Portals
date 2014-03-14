@@ -84,7 +84,7 @@ public class PortablePortals extends JavaPlugin {
 
 		portal.setItemMeta(im);
 
-		ShapedRecipe portalCube = new ShapedRecipe(portal).shape(new String[] { "*#*", "#%#", "*#*" }).setIngredient('#', Material.EMERALD).setIngredient('*', Material.OBSIDIAN).setIngredient('%', Material.NETHER_STAR);
+		ShapedRecipe portalCube = new ShapedRecipe(portal).shape(new String[] { "*#*", "*%*", "*#*" }).setIngredient('#', Material.EMERALD).setIngredient('*', Material.OBSIDIAN).setIngredient('%', Material.NETHER_STAR);
 
 		Bukkit.getServer().addRecipe(portalCube);
 		// =======================================================================================
@@ -98,7 +98,7 @@ public class PortablePortals extends JavaPlugin {
 				{
 					if (player.hasPermission("PortablePortals.Use"))
 					{
-						if (!PortalManager.getPortals().isEmpty())
+						if (!PortalManager.getPortals().isEmpty() && !player.isSneaking())
 						{
 							Location loc = PortalManager.getRoundedLocation(player.getLocation());
 							for (Portal portal : PortalManager.getPortals())
@@ -108,7 +108,7 @@ public class PortablePortals extends JavaPlugin {
 					}
 				}
 			}
-		}, Settings.portalRefreshTime(), 20);
+		}, Settings.portalRefreshTime(), 0);
 
 	}
 

@@ -14,7 +14,8 @@ public enum Msgs
 	Portals_NotEnoughRoom("Action.Not Enough Room", ""),
 	Portals_PortalOpened("Action.Portal Opened", ""),
 	Portals_PortalClosed("Action.Portal Closed", ""),
-	Portals_TargetSet("Action.Target Set", "");
+	Portals_TargetSet("Action.Target Set", ""), 
+	Portals_NoTarget("Portals.No Target", "");
 
 	private String string;
 	private String replace;

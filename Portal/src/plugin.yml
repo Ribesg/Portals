@@ -1,7 +1,7 @@
 name: Portable-Portals
 description: Fast Easy Portable Portals
 main: me.sniperzciinema.portal.PortablePortals
-version: 0.4
+version: 0.5
 author: SniperzCiinema
 
 commands:

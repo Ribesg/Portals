@@ -2,6 +2,7 @@
 package me.sniperzciinema.portal;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import me.sniperzciinema.portal.PortalHandlers.Portal;
 import me.sniperzciinema.portal.PortalHandlers.PortalManager;
@@ -44,7 +45,7 @@ public class PortalsListeners implements Listener {
 				if (e.getItem().getItemMeta().hasDisplayName())
 					if (e.getPlayer().hasPermission("PortablePortals.Create"))
 					{
-						if (e.getItem().getItemMeta().getDisplayName().contains(ChatColor.stripColor(Msgs.Portals_Title.getString())))
+						if (ChatColor.stripColor(Msgs.Portals_Title.getString()).contains(ChatColor.stripColor(e.getItem().getItemMeta().getDisplayName())))
 						{
 
 							final Player player = e.getPlayer();
@@ -89,13 +90,13 @@ public class PortalsListeners implements Listener {
 								{
 									Location target = PortalManager.getTargetFromItem(e.getItem());
 
-									if (target == null)
-										if (Settings.doesPortalWithoutTargetKill())
+									if (target == null){
+										Random r = new Random();
+										int i = r.nextInt(2000)-1000;
 											target = new Location(
-													player.getWorld(), 0, 0, 0);
-										else
-											target = e.getPlayer().getWorld().getSpawnLocation();
-
+													player.getWorld(), i, player.getWorld().getHighestBlockYAt(i, i), i);
+											player.sendMessage(Msgs.Portals_NoTarget.getString());
+									}
 									// Remove portal from hand
 									final Portal portal = PortalManager.addPortal(e.getClickedBlock().getLocation(), target, e.getItem(), player);
 
