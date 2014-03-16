@@ -66,7 +66,9 @@ public class Portal {
 	 * @return the target
 	 */
 	public Location getTarget() {
-		return target;
+		if(target != null && !target.getChunk().isLoaded())
+				target.getChunk().load();
+		return target.clone().add(0, 0.5, 0);
 	}
 
 	/**
