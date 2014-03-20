@@ -66,8 +66,8 @@ public class Portal {
 	 * @return the target
 	 */
 	public Location getTarget() {
-		if(target != null && !target.getChunk().isLoaded())
-				target.getChunk().load();
+		if (target != null && !target.getChunk().isLoaded())
+			target.getChunk().load();
 		return target.clone().add(0, 0.5, 0);
 	}
 
@@ -96,15 +96,15 @@ public class Portal {
 
 	public boolean isBlock(Location loc) {
 		loc = PortalManager.getRoundedLocation(loc);
-		Location location2 = location.clone();
-		int i = 0;
-		Location locs = location2.add(-1, 0, 0);
-		for (i = 0; i != 3; i++)
+		for (int i = 0; i != 3; i++)
 		{
-			if (locs == location2.add(0, 1, 0))
-				return true;
-			if (locs == location2.add(0, 2, 0))
-				return true;
+			for (int j = -1; j != 2; j++)
+			{
+				if (location.getBlockX() + j == loc.getBlockX() && location.getBlockY() + i == loc.getBlockY() && location.getBlockZ() == loc.getBlockZ())
+					return true;
+				else if (location.getBlockX() == loc.getBlockX() && location.getBlockY() + i == loc.getBlockY() && location.getBlockZ() + j == loc.getBlockZ())
+					return true;
+			}
 		}
 		return false;
 	}
