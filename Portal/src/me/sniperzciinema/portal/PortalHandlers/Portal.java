@@ -14,17 +14,16 @@ import org.bukkit.inventory.ItemStack;
 
 public class Portal {
 
-	private Location location;
-	private ItemStack item;
-	private Location target;
-	private Player thrower;
+	private Location	location;
+	private ItemStack	item;
+	private Location	target;
+	private Player		thrower;
 
-	private int effectTimer;
-	private int effect;
-	private boolean direction = false;
+	private int			effectTimer;
+	private int			effect;
+	private boolean		direction	= false;
 
-	public Portal(Location location, Location target, ItemStack item,
-			Player thrower)
+	public Portal(Location location, Location target, ItemStack item, Player thrower)
 	{
 		this.location = location;
 		this.target = target;
@@ -102,8 +101,9 @@ public class Portal {
 			{
 				if (location.getBlockX() + j == loc.getBlockX() && location.getBlockY() + i == loc.getBlockY() && location.getBlockZ() == loc.getBlockZ())
 					return true;
-				else if (location.getBlockX() == loc.getBlockX() && location.getBlockY() + i == loc.getBlockY() && location.getBlockZ() + j == loc.getBlockZ())
-					return true;
+				else
+					if (location.getBlockX() == loc.getBlockX() && location.getBlockY() + i == loc.getBlockY() && location.getBlockZ() + j == loc.getBlockZ())
+						return true;
 			}
 		}
 		return false;
@@ -126,7 +126,8 @@ public class Portal {
 			location2.getWorld().getBlockAt((int) location2.getX() - 1, (int) location2.getY() + 2, (int) location2.getZ()).setType(Material.STEP);
 			location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 2, (int) location2.getZ()).setType(Material.STEP);
 			location2.getWorld().getBlockAt((int) location2.getX() + 1, (int) location2.getY() + 2, (int) location2.getZ()).setType(Material.STEP);
-		} else
+		}
+		else
 		{
 			direction = true;
 			location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ() - 1).setType(Material.COBBLE_WALL);
@@ -159,7 +160,8 @@ public class Portal {
 			location2.getWorld().getBlockAt((int) location2.getX() - 1, (int) location2.getY() + 2, (int) location2.getZ()).setType(Material.AIR);
 			location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 2, (int) location2.getZ()).setType(Material.AIR);
 			location2.getWorld().getBlockAt((int) location2.getX() + 1, (int) location2.getY() + 2, (int) location2.getZ()).setType(Material.AIR);
-		} else
+		}
+		else
 		{
 			location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ() - 1).setType(Material.AIR);
 			location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ()).setType(Material.AIR);
@@ -194,7 +196,8 @@ public class Portal {
 										if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 2, (int) location2.getZ()).getType() == Material.AIR)
 											if (location2.getWorld().getBlockAt((int) location2.getX() + 1, (int) location2.getY() + 2, (int) location2.getZ()).getType() == Material.AIR)
 												return true;
-		} else
+		}
+		else
 		{
 			if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ() - 1).getType() == Material.AIR)
 				if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ()).getType() == Material.AIR)
@@ -225,7 +228,8 @@ public class Portal {
 					location2.getWorld().playEffect(location2.clone().add(0, 1, 0), Effect.ENDER_SIGNAL, 5);
 					location2.getWorld().playEffect(location2.clone(), Effect.ENDER_SIGNAL, 5);
 					effect++;
-				} else
+				}
+				else
 					Bukkit.getScheduler().cancelTask(effectTimer);
 			}
 		}, 0, 20);

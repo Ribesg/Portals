@@ -30,18 +30,18 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class PortablePortals extends JavaPlugin {
 
-	public static Plugin me;
-	public ItemStack portal;
-	public boolean update = false;
-	public String name = "";
+	public static Plugin	me;
+	public ItemStack		portal;
+	public boolean			update	= false;
+	public String			name	= "";
 
 	public void onEnable() {
 		me = this;
 		Updater updater;
 		getConfig().options().copyDefaults(true);
+		saveConfig();
 		Files.getMessages().options().copyDefaults(true);
 		Files.saveMessages();
-		saveConfig();
 
 		PluginManager pm = getServer().getPluginManager();
 		pm = getServer().getPluginManager();
@@ -50,7 +50,8 @@ public class PortablePortals extends JavaPlugin {
 			Metrics metrics = new Metrics(this);
 			metrics.start();
 			System.out.println("Metrics was started!");
-		} catch (IOException e)
+		}
+		catch (IOException e)
 		{
 			System.out.println("Metrics was unable to start...");
 		}
@@ -61,13 +62,13 @@ public class PortablePortals extends JavaPlugin {
 		{
 			try
 			{
-				updater = new Updater(this, 65787, getFile(),
-						Updater.UpdateType.NO_DOWNLOAD, false);
+				updater = new Updater(this, 65787, getFile(), Updater.UpdateType.NO_DOWNLOAD, false);
 
 				update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
 				name = updater.getLatestName();
 
-			} catch (Exception ex)
+			}
+			catch (Exception ex)
 			{
 				System.out.println("The auto-updater tried to contact dev.bukkit.org, but was unsuccessful.");
 			}
@@ -94,28 +95,24 @@ public class PortablePortals extends JavaPlugin {
 
 			@Override
 			public void run() {
-				if(!PortalManager.getPortals().isEmpty())
-					for(Portal portal : PortalManager.getPortals()){
-						for(Entity e : portal.getLocation().getChunk().getEntities()){
+				if (!PortalManager.getPortals().isEmpty())
+					for (Portal portal : PortalManager.getPortals())
+					{
+						for (Entity e : portal.getLocation().getChunk().getEntities())
+						{
+							if (e instanceof Player)
+							{
+								if (!((Player) e).hasPermission("PortablePortals.Use"))
+								{
+									break;
+								}
+							}
 							Location loc = PortalManager.getRoundedLocation(e.getLocation());
-							
+
 							if (loc.getBlockX() == portal.getLocation().getBlockX() && loc.getBlockY() == portal.getLocation().getBlockY() && loc.getBlockZ() == portal.getLocation().getBlockZ())
 								e.teleport(portal.getTarget());
 						}
 					}
-				/*for (Player player : Bukkit.getOnlinePlayers())
-				{
-					if (player.hasPermission("PortablePortals.Use"))
-					{
-						if (!PortalManager.getPortals().isEmpty() && !player.isSneaking())
-						{
-							Location loc = PortalManager.getRoundedLocation(player.getLocation());
-							for (Portal portal : PortalManager.getPortals())
-								if (loc.getBlockX() == portal.getLocation().getBlockX() && loc.getBlockY() == portal.getLocation().getBlockY() && loc.getBlockZ() == portal.getLocation().getBlockZ())
-									player.teleport(portal.getTarget());
-						}
-					}
-				}*/
 			}
 		}, Settings.portalRefreshTime(), 0);
 
@@ -136,13 +133,14 @@ public class PortablePortals extends JavaPlugin {
 				player.getInventory().addItem(portal);
 			}
 
-		}else if (cmd.getName().equalsIgnoreCase("PReload"))
-		{
-			if (sender instanceof Player && ((Player)sender).isOp())
-				Files.reloadAll();
-			
-
 		}
+		else
+			if (cmd.getName().equalsIgnoreCase("PReload"))
+			{
+				if ((sender instanceof Player && ((Player) sender).isOp()) || !(sender instanceof Player))
+					Files.reloadAll();
+
+			}
 		return true;
 	}
 

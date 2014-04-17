@@ -15,8 +15,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class Files {
 
-	public static YamlConfiguration messages = null;
-	public static File messagesFile = null;
+	public static YamlConfiguration	messages		= null;
+	public static File				messagesFile	= null;
 
 	public static FileConfiguration getConfig() {
 		return PortablePortals.me.getConfig();
@@ -73,7 +73,8 @@ public class Files {
 		try
 		{
 			getMessages().save(messagesFile);
-		} catch (IOException ex)
+		}
+		catch (IOException ex)
 		{
 			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + messagesFile, ex);
 		}

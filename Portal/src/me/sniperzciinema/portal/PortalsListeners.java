@@ -11,6 +11,7 @@ import me.sniperzciinema.portal.Util.Settings;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -28,13 +29,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class PortalsListeners implements Listener {
 
-	public PortablePortals plugin;
+	public PortablePortals	plugin;
 
 	public PortalsListeners(PortablePortals instance)
 	{
 		plugin = instance;
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerUsePortal(final PlayerInteractEvent e) {
@@ -54,6 +55,26 @@ public class PortalsListeners implements Listener {
 							if (e.getAction() == Action.LEFT_CLICK_BLOCK)
 							{
 
+								if (player.getGameMode() != GameMode.CREATIVE && Settings.isItemRequired())
+								{
+									if (player.getInventory().contains(Material.getMaterial(Settings.getItemRequired())))
+									{
+										for (ItemStack im : player.getInventory().getContents())
+										{
+											if (im.getTypeId() == Settings.getItemRequired())
+											{
+												if (im.getAmount() != 1)
+													im.setAmount(im.getAmount() - 1);
+												else
+													player.getInventory().remove(im);
+												break;
+											}
+										}
+									}
+									else
+										player.sendMessage(Msgs.Portals_NeedItem.getString(Material.getMaterial(Settings.getItemRequired()).name().toLowerCase()));
+
+								}
 								// Get Location, change into a string, set as
 								// item lore
 								Location loc = e.getClickedBlock().getLocation().clone().add(0.0, 1.0, 0.0);
@@ -83,67 +104,71 @@ public class PortalsListeners implements Listener {
 								// Tell the player what just happened
 								player.sendMessage(Msgs.Portals_TargetSet.getString());
 
-							} else if (e.getAction() == Action.RIGHT_CLICK_BLOCK)
-							{
-								// Save the location of the target
-								if (player.hasPermission("PortablePortals.Create"))
+							}
+							else
+								if (e.getAction() == Action.RIGHT_CLICK_BLOCK)
 								{
-									Location target = PortalManager.getTargetFromItem(e.getItem());
-
-									if (target == null){
-										Random r = new Random();
-										int i = r.nextInt(2000)-1000;
-											target = new Location(
-													player.getWorld(), i, player.getWorld().getHighestBlockYAt(i, i), i);
-											player.sendMessage(Msgs.Portals_NoTarget.getString());
-									}
-									// Remove portal from hand
-									final Portal portal = PortalManager.addPortal(e.getClickedBlock().getLocation(), target, e.getItem(), player);
-
-									if (e.getItem().getAmount() != 1)
-										e.getItem().setAmount(e.getItem().getAmount() - 1);
-									else
-										player.getInventory().remove(e.getItem());
-
-									player.updateInventory();
-
-									player.getWorld().createExplosion(portal.getLocation(), 0.0F, false);
-
-									if (!portal.canCreatePortal())
+									// Save the location of the target
+									if (player.hasPermission("PortablePortals.Create"))
 									{
-										player.sendMessage(Msgs.Portals_NotEnoughRoom.getString());
+										Location target = PortalManager.getTargetFromItem(e.getItem());
 
-										player.getInventory().addItem(portal.getItem());
+										if (target == null)
+										{
+											Random r = new Random();
+											int i = r.nextInt(2000) - 1000;
+											target = new Location(player.getWorld(), i,
+													player.getWorld().getHighestBlockYAt(i, i), i);
+											player.sendMessage(Msgs.Portals_NoTarget.getString());
+										}
+										// Remove portal from hand
+										final Portal portal = PortalManager.addPortal(e.getClickedBlock().getLocation(), target, e.getItem(), player);
+
+										if (e.getItem().getAmount() != 1)
+											e.getItem().setAmount(e.getItem().getAmount() - 1);
+										else
+											player.getInventory().remove(e.getItem());
 
 										player.updateInventory();
-										PortalManager.delPortal(portal);
 
-									} else
-									{
+										player.getWorld().createExplosion(portal.getLocation(), 0.0F, false);
 
-										portal.createPortal();
+										if (!portal.canCreatePortal())
+										{
+											player.sendMessage(Msgs.Portals_NotEnoughRoom.getString());
 
-										player.sendMessage(Msgs.Portals_PortalOpened.getString());
+											player.getInventory().addItem(portal.getItem());
 
-										portal.playEffect();
+											player.updateInventory();
+											PortalManager.delPortal(portal);
 
-										// Timer to give portal item back
-										Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(PortablePortals.me, new Runnable()
+										}
+										else
 										{
 
-											@Override
-											public void run() {
-												player.getInventory().addItem(portal.getItem());
+											portal.createPortal();
 
-												player.sendMessage(Msgs.Portals_PortalClosed.getString());
-												portal.removePortal();
-												PortalManager.delPortal(portal);
-											}
-										}, Settings.stayOpenTime());
+											player.sendMessage(Msgs.Portals_PortalOpened.getString());
 
+											portal.playEffect();
+
+											// Timer to give portal item back
+											Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(PortablePortals.me, new Runnable()
+											{
+
+												@Override
+												public void run() {
+													player.getInventory().addItem(portal.getItem());
+
+													player.sendMessage(Msgs.Portals_PortalClosed.getString());
+													portal.removePortal();
+													PortalManager.delPortal(portal);
+												}
+											}, Settings.stayOpenTime());
+
+										}
 									}
 								}
-							}
 							e.setUseInteractedBlock(Result.DENY);
 							e.setUseItemInHand(Result.DENY);
 							e.setCancelled(true);
