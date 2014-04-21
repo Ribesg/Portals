@@ -33,7 +33,20 @@ public class PortalsListeners implements Listener {
 
 	public PortalsListeners(PortablePortals instance)
 	{
-		plugin = instance;
+		this.plugin = instance;
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerAttemptToBreakPortal(BlockBreakEvent event) {
+		for (Portal portal : PortalManager.getPortals())
+			if (portal.isBlock(event.getBlock().getLocation()))
+				event.setCancelled(true);
+	}
+
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		if (event.getPlayer().isOp() && this.plugin.update)
+			System.out.println("Theres a new update for Portable Plugins(v" + this.plugin.name + ").");
 	}
 
 	@SuppressWarnings("deprecation")
@@ -45,7 +58,6 @@ public class PortalsListeners implements Listener {
 			if (e.getItem().getType().equals(Material.NETHER_STAR))
 				if (e.getItem().getItemMeta().hasDisplayName())
 					if (e.getPlayer().hasPermission("PortablePortals.Create"))
-					{
 						if (ChatColor.stripColor(Msgs.Portals_Title.getString()).contains(ChatColor.stripColor(e.getItem().getItemMeta().getDisplayName())))
 						{
 
@@ -55,12 +67,10 @@ public class PortalsListeners implements Listener {
 							if (e.getAction() == Action.LEFT_CLICK_BLOCK)
 							{
 
-								if (player.getGameMode() != GameMode.CREATIVE && Settings.isItemRequired())
-								{
+								if ((player.getGameMode() != GameMode.CREATIVE) && Settings.isItemRequired())
 									if (player.getInventory().contains(Material.getMaterial(Settings.getItemRequired())))
 									{
 										for (ItemStack im : player.getInventory().getContents())
-										{
 											if (im.getTypeId() == Settings.getItemRequired())
 											{
 												if (im.getAmount() != 1)
@@ -69,12 +79,9 @@ public class PortalsListeners implements Listener {
 													player.getInventory().remove(im);
 												break;
 											}
-										}
 									}
 									else
 										player.sendMessage(Msgs.Portals_NeedItem.getString(Material.getMaterial(Settings.getItemRequired()).name().toLowerCase()));
-
-								}
 								// Get Location, change into a string, set as
 								// item lore
 								Location loc = e.getClickedBlock().getLocation().clone().add(0.0, 1.0, 0.0);
@@ -107,7 +114,6 @@ public class PortalsListeners implements Listener {
 							}
 							else
 								if (e.getAction() == Action.RIGHT_CLICK_BLOCK)
-								{
 									// Save the location of the target
 									if (player.hasPermission("PortablePortals.Create"))
 									{
@@ -168,26 +174,9 @@ public class PortalsListeners implements Listener {
 
 										}
 									}
-								}
 							e.setUseInteractedBlock(Result.DENY);
 							e.setUseItemInHand(Result.DENY);
 							e.setCancelled(true);
 						}
-					}
-	}
-
-	@EventHandler
-	public void onPlayerJoin(PlayerJoinEvent event) {
-		if (event.getPlayer().isOp() && plugin.update)
-		{
-			System.out.println("Theres a new update for Portable Plugins(v" + plugin.name + ").");
-		}
-	}
-
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerAttemptToBreakPortal(BlockBreakEvent event) {
-		for (Portal portal : PortalManager.getPortals())
-			if (portal.isBlock(event.getBlock().getLocation()))
-				event.setCancelled(true);
 	}
 }

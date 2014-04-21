@@ -23,23 +23,23 @@ public enum Msgs
 
 	private Msgs(String s, String r)
 	{
-		string = s;
-		replace = r;
+		this.string = s;
+		this.replace = r;
 	}
 
 	public String getString(String... replacement) {
 		try
 		{
-			String message = ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString(string).replaceAll("&x", "&" + String.valueOf(RandomChatColor.getColor().getChar())).replaceAll("&y", "&" + String.valueOf(RandomChatColor.getFormat().getChar()))) + " ";
+			String message = ChatColor.translateAlternateColorCodes('&', Files.getMessages().getString(this.string).replaceAll("&x", "&" + String.valueOf(RandomChatColor.getColor().getChar())).replaceAll("&y", "&" + String.valueOf(RandomChatColor.getFormat().getChar()))) + " ";
 
-			if (replace != "")
-				message = message.replaceAll(replace, replacement[0]);
+			if (this.replace != "")
+				message = message.replaceAll(this.replace, replacement[0]);
 
 			return message;
 		}
 		catch (NullPointerException npe)
 		{
-			return "Unable to find message: " + string;
+			return "Unable to find message: " + this.string;
 		}
 	}
 

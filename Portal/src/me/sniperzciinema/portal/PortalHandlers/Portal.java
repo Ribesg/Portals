@@ -31,88 +31,45 @@ public class Portal {
 		this.thrower = thrower;
 	}
 
-	/**
-	 * @return the location
-	 */
-	public Location getLocation() {
-		return location;
-	}
+	public boolean canCreatePortal() {
+		Location location2 = this.location.clone();
 
-	/**
-	 * @param location
-	 *            the location to set
-	 */
-	public void setLocation(Location location) {
-		this.location = location;
-	}
-
-	/**
-	 * @return the item
-	 */
-	public ItemStack getItem() {
-		return item;
-	}
-
-	/**
-	 * @param item
-	 *            the item to set
-	 */
-	public void setItem(ItemStack item) {
-		this.item = item;
-	}
-
-	/**
-	 * @return the target
-	 */
-	public Location getTarget() {
-		if (target != null && !target.getChunk().isLoaded())
-			target.getChunk().load();
-		return target.clone().add(0, 0.5, 0);
-	}
-
-	/**
-	 * @param target
-	 *            the target to set
-	 */
-	public void setTarget(Location target) {
-		this.target = target;
-	}
-
-	/**
-	 * @return the thrower
-	 */
-	public Player getThrower() {
-		return thrower;
-	}
-
-	/**
-	 * @param thrower
-	 *            the thrower to set
-	 */
-	public void setThrower(Player thrower) {
-		this.thrower = thrower;
-	}
-
-	public boolean isBlock(Location loc) {
-		loc = PortalManager.getRoundedLocation(loc);
-		for (int i = 0; i != 3; i++)
+		String d = Direction.getCardinalDirection(this.thrower);
+		if (d.contains("East") || d.contains("West"))
 		{
-			for (int j = -1; j != 2; j++)
-			{
-				if (location.getBlockX() + j == loc.getBlockX() && location.getBlockY() + i == loc.getBlockY() && location.getBlockZ() == loc.getBlockZ())
-					return true;
-				else
-					if (location.getBlockX() == loc.getBlockX() && location.getBlockY() + i == loc.getBlockY() && location.getBlockZ() + j == loc.getBlockZ())
-						return true;
-			}
+			if (location2.getWorld().getBlockAt((int) location2.getX() - 1, (int) location2.getY(), (int) location2.getZ()).getType() == Material.AIR)
+				if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ()).getType() == Material.AIR)
+					if (location2.getWorld().getBlockAt((int) location2.getX() + 1, (int) location2.getY(), (int) location2.getZ()).getType() == Material.AIR)
+
+						if (location2.getWorld().getBlockAt((int) location2.getX() - 1, (int) location2.getY() + 1, (int) location2.getZ()).getType() == Material.AIR)
+							if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 1, (int) location2.getZ()).getType() == Material.AIR)
+								if (location2.getWorld().getBlockAt((int) location2.getX() + 1, (int) location2.getY() + 1, (int) location2.getZ()).getType() == Material.AIR)
+
+									if (location2.getWorld().getBlockAt((int) location2.getX() - 1, (int) location2.getY() + 2, (int) location2.getZ()).getType() == Material.AIR)
+										if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 2, (int) location2.getZ()).getType() == Material.AIR)
+											if (location2.getWorld().getBlockAt((int) location2.getX() + 1, (int) location2.getY() + 2, (int) location2.getZ()).getType() == Material.AIR)
+												return true;
 		}
+		else
+			if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ() - 1).getType() == Material.AIR)
+				if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ()).getType() == Material.AIR)
+					if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ() + 1).getType() == Material.AIR)
+
+						if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 1, (int) location2.getZ() - 1).getType() == Material.AIR)
+							if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 1, (int) location2.getZ()).getType() == Material.AIR)
+								if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 1, (int) location2.getZ() + 1).getType() == Material.AIR)
+
+									if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 2, (int) location2.getZ() - 1).getType() == Material.AIR)
+										if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 2, (int) location2.getZ()).getType() == Material.AIR)
+											if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 2, (int) location2.getZ() + 1).getType() == Material.AIR)
+												return true;
 		return false;
 	}
 
 	@SuppressWarnings("deprecation")
 	public void createPortal() {
-		Location location2 = location.clone();
-		String d = Direction.getCardinalDirection(thrower);
+		Location location2 = this.location.clone();
+		String d = Direction.getCardinalDirection(this.thrower);
 		if (d.contains("East") || d.contains("West"))
 		{
 			location2.getWorld().getBlockAt((int) location2.getX() - 1, (int) location2.getY(), (int) location2.getZ()).setType(Material.COBBLE_WALL);
@@ -129,7 +86,7 @@ public class Portal {
 		}
 		else
 		{
-			direction = true;
+			this.direction = true;
 			location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ() - 1).setType(Material.COBBLE_WALL);
 			location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ()).setType(Material.getMaterial(36));
 			location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ() + 1).setType(Material.COBBLE_WALL);
@@ -145,9 +102,70 @@ public class Portal {
 		}
 	}
 
+	/**
+	 * @return the item
+	 */
+	public ItemStack getItem() {
+		return this.item;
+	}
+
+	/**
+	 * @return the location
+	 */
+	public Location getLocation() {
+		return this.location;
+	}
+
+	/**
+	 * @return the target
+	 */
+	public Location getTarget() {
+		if ((this.target != null) && !this.target.getChunk().isLoaded())
+			this.target.getChunk().load();
+		return this.target.clone().add(0, 0.5, 0);
+	}
+
+	/**
+	 * @return the thrower
+	 */
+	public Player getThrower() {
+		return this.thrower;
+	}
+
+	public boolean isBlock(Location loc) {
+		loc = PortalManager.getRoundedLocation(loc);
+		for (int i = 0; i != 3; i++)
+			for (int j = -1; j != 2; j++)
+				if (((this.location.getBlockX() + j) == loc.getBlockX()) && ((this.location.getBlockY() + i) == loc.getBlockY()) && (this.location.getBlockZ() == loc.getBlockZ()))
+					return true;
+				else
+					if ((this.location.getBlockX() == loc.getBlockX()) && ((this.location.getBlockY() + i) == loc.getBlockY()) && ((this.location.getBlockZ() + j) == loc.getBlockZ()))
+						return true;
+		return false;
+	}
+
+	public void playEffect() {
+		final Location location2 = this.location.clone();
+		this.effectTimer = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(PortablePortals.me, new Runnable()
+		{
+
+			@Override
+			public void run() {
+				if (Portal.this.effect != 10)
+				{
+					location2.getWorld().playEffect(location2.clone().add(0, 1, 0), Effect.ENDER_SIGNAL, 5);
+					location2.getWorld().playEffect(location2.clone(), Effect.ENDER_SIGNAL, 5);
+					Portal.this.effect++;
+				}
+				else
+					Bukkit.getScheduler().cancelTask(Portal.this.effectTimer);
+			}
+		}, 0, 20);
+	}
+
 	public void removePortal() {
-		Location location2 = location.clone();
-		if (!direction)
+		Location location2 = this.location.clone();
+		if (!this.direction)
 		{
 			location2.getWorld().getBlockAt((int) location2.getX() - 1, (int) location2.getY(), (int) location2.getZ()).setType(Material.AIR);
 			location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ()).setType(Material.AIR);
@@ -178,60 +196,35 @@ public class Portal {
 		}
 	}
 
-	public boolean canCreatePortal() {
-		Location location2 = location.clone();
-
-		String d = Direction.getCardinalDirection(thrower);
-		if (d.contains("East") || d.contains("West"))
-		{
-			if (location2.getWorld().getBlockAt((int) location2.getX() - 1, (int) location2.getY(), (int) location2.getZ()).getType() == Material.AIR)
-				if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ()).getType() == Material.AIR)
-					if (location2.getWorld().getBlockAt((int) location2.getX() + 1, (int) location2.getY(), (int) location2.getZ()).getType() == Material.AIR)
-
-						if (location2.getWorld().getBlockAt((int) location2.getX() - 1, (int) location2.getY() + 1, (int) location2.getZ()).getType() == Material.AIR)
-							if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 1, (int) location2.getZ()).getType() == Material.AIR)
-								if (location2.getWorld().getBlockAt((int) location2.getX() + 1, (int) location2.getY() + 1, (int) location2.getZ()).getType() == Material.AIR)
-
-									if (location2.getWorld().getBlockAt((int) location2.getX() - 1, (int) location2.getY() + 2, (int) location2.getZ()).getType() == Material.AIR)
-										if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 2, (int) location2.getZ()).getType() == Material.AIR)
-											if (location2.getWorld().getBlockAt((int) location2.getX() + 1, (int) location2.getY() + 2, (int) location2.getZ()).getType() == Material.AIR)
-												return true;
-		}
-		else
-		{
-			if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ() - 1).getType() == Material.AIR)
-				if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ()).getType() == Material.AIR)
-					if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ() + 1).getType() == Material.AIR)
-
-						if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 1, (int) location2.getZ() - 1).getType() == Material.AIR)
-							if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 1, (int) location2.getZ()).getType() == Material.AIR)
-								if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 1, (int) location2.getZ() + 1).getType() == Material.AIR)
-
-									if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 2, (int) location2.getZ() - 1).getType() == Material.AIR)
-										if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 2, (int) location2.getZ()).getType() == Material.AIR)
-											if (location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 2, (int) location2.getZ() + 1).getType() == Material.AIR)
-												return true;
-
-		}
-		return false;
+	/**
+	 * @param item
+	 *            the item to set
+	 */
+	public void setItem(ItemStack item) {
+		this.item = item;
 	}
 
-	public void playEffect() {
-		final Location location2 = location.clone();
-		effectTimer = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(PortablePortals.me, new Runnable()
-		{
+	/**
+	 * @param location
+	 *            the location to set
+	 */
+	public void setLocation(Location location) {
+		this.location = location;
+	}
 
-			@Override
-			public void run() {
-				if (effect != 10)
-				{
-					location2.getWorld().playEffect(location2.clone().add(0, 1, 0), Effect.ENDER_SIGNAL, 5);
-					location2.getWorld().playEffect(location2.clone(), Effect.ENDER_SIGNAL, 5);
-					effect++;
-				}
-				else
-					Bukkit.getScheduler().cancelTask(effectTimer);
-			}
-		}, 0, 20);
+	/**
+	 * @param target
+	 *            the target to set
+	 */
+	public void setTarget(Location target) {
+		this.target = target;
+	}
+
+	/**
+	 * @param thrower
+	 *            the thrower to set
+	 */
+	public void setThrower(Player thrower) {
+		this.thrower = thrower;
 	}
 }

@@ -22,17 +22,11 @@ public class Files {
 		return PortablePortals.me.getConfig();
 	}
 
-	public static void saveConfig() {
-		PortablePortals.me.saveConfig();
-	}
-
-	public static void reloadConfig() {
-		PortablePortals.me.reloadConfig();
-	}
-
-	public static void saveAll() {
-		saveConfig();
-		saveMessages();
+	// Get Arenas File
+	public static FileConfiguration getMessages() {
+		if (Files.messages == null)
+			reloadMessages();
+		return Files.messages;
 	}
 
 	public static void reloadAll() {
@@ -40,43 +34,49 @@ public class Files {
 		reloadMessages();
 	}
 
-	// //////////////////////////////////////////////////////////////////////////////
-	// MESSAGES
+	public static void reloadConfig() {
+		PortablePortals.me.reloadConfig();
+	}
 
 	// Reload Arenas File
 	public static void reloadMessages() {
-		if (messages == null)
-			messagesFile = new File(
+		if (Files.messages == null)
+			Files.messagesFile = new File(
 					Bukkit.getPluginManager().getPlugin("Portable-Portals").getDataFolder(),
 					"Messages.yml");
-		messages = YamlConfiguration.loadConfiguration(messagesFile);
+		Files.messages = YamlConfiguration.loadConfiguration(Files.messagesFile);
 		// Look for defaults in the jar
 		InputStream defConfigStream = Bukkit.getPluginManager().getPlugin("Portable-Portals").getResource("Messages.yml");
 		if (defConfigStream != null)
 		{
 			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			messages.setDefaults(defConfig);
+			Files.messages.setDefaults(defConfig);
 		}
 	}
 
-	// Get Arenas File
-	public static FileConfiguration getMessages() {
-		if (messages == null)
-			reloadMessages();
-		return messages;
+	// //////////////////////////////////////////////////////////////////////////////
+	// MESSAGES
+
+	public static void saveAll() {
+		saveConfig();
+		saveMessages();
+	}
+
+	public static void saveConfig() {
+		PortablePortals.me.saveConfig();
 	}
 
 	// Safe Arenas File
 	public static void saveMessages() {
-		if (messages == null || messagesFile == null)
+		if ((Files.messages == null) || (Files.messagesFile == null))
 			return;
 		try
 		{
-			getMessages().save(messagesFile);
+			getMessages().save(Files.messagesFile);
 		}
 		catch (IOException ex)
 		{
-			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + messagesFile, ex);
+			Bukkit.getLogger().log(Level.SEVERE, "Could not save config " + Files.messagesFile, ex);
 		}
 	}
 

@@ -35,8 +35,33 @@ public class PortablePortals extends JavaPlugin {
 	public boolean			update	= false;
 	public String			name	= "";
 
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+
+		if (cmd.getName().equalsIgnoreCase("PPortals"))
+		{
+			if ((sender instanceof Player) && sender.hasPermission("PortablePortals.Spawn"))
+			{
+				// Define "player" as the one who sent the command
+				Player player = (Player) sender;
+				player.getInventory().addItem(this.portal);
+			}
+
+		}
+		else
+			if (cmd.getName().equalsIgnoreCase("PReload"))
+				if (((sender instanceof Player) && ((Player) sender).isOp()) || !(sender instanceof Player))
+					Files.reloadAll();
+		return true;
+	}
+
+	@Override
+	public void onDisable() {
+	}
+
+	@Override
 	public void onEnable() {
-		me = this;
+		PortablePortals.me = this;
 		Updater updater;
 		getConfig().options().copyDefaults(true);
 		saveConfig();
@@ -59,22 +84,20 @@ public class PortablePortals extends JavaPlugin {
 		pm.registerEvents(new PortalsListeners(this), this);
 
 		if (getConfig().getBoolean("Check for new updates"))
-		{
 			try
 			{
 				updater = new Updater(this, 65787, getFile(), Updater.UpdateType.NO_DOWNLOAD, false);
 
-				update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
-				name = updater.getLatestName();
+				this.update = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
+				this.name = updater.getLatestName();
 
 			}
 			catch (Exception ex)
 			{
 				System.out.println("The auto-updater tried to contact dev.bukkit.org, but was unsuccessful.");
 			}
-		}
-		portal = new ItemStack(Material.NETHER_STAR, 1);
-		ItemMeta im = portal.getItemMeta();
+		this.portal = new ItemStack(Material.NETHER_STAR, 1);
+		ItemMeta im = this.portal.getItemMeta();
 		im.setDisplayName(Msgs.Portals_Title.getString());
 		ArrayList<String> lores = new ArrayList<String>();
 		lores.add(Msgs.Portals_LeftClickTo.getString());
@@ -83,9 +106,9 @@ public class PortablePortals extends JavaPlugin {
 		lores.add(Msgs.Portals_Target.getString("None"));
 		im.setLore(lores);
 
-		portal.setItemMeta(im);
+		this.portal.setItemMeta(im);
 
-		ShapedRecipe portalCube = new ShapedRecipe(portal).shape(new String[] { "*#*", "*%*", "*#*" }).setIngredient('#', Material.EMERALD).setIngredient('*', Material.OBSIDIAN).setIngredient('%', Material.NETHER_STAR);
+		ShapedRecipe portalCube = new ShapedRecipe(this.portal).shape(new String[] { "*#*", "*%*", "*#*" }).setIngredient('#', Material.EMERALD).setIngredient('*', Material.OBSIDIAN).setIngredient('%', Material.NETHER_STAR);
 
 		Bukkit.getServer().addRecipe(portalCube);
 		// =======================================================================================
@@ -97,51 +120,19 @@ public class PortablePortals extends JavaPlugin {
 			public void run() {
 				if (!PortalManager.getPortals().isEmpty())
 					for (Portal portal : PortalManager.getPortals())
-					{
 						for (Entity e : portal.getLocation().getChunk().getEntities())
 						{
 							if (e instanceof Player)
-							{
 								if (!((Player) e).hasPermission("PortablePortals.Use"))
-								{
 									break;
-								}
-							}
 							Location loc = PortalManager.getRoundedLocation(e.getLocation());
 
-							if (loc.getBlockX() == portal.getLocation().getBlockX() && loc.getBlockY() == portal.getLocation().getBlockY() && loc.getBlockZ() == portal.getLocation().getBlockZ())
+							if ((loc.getBlockX() == portal.getLocation().getBlockX()) && (loc.getBlockY() == portal.getLocation().getBlockY()) && (loc.getBlockZ() == portal.getLocation().getBlockZ()))
 								e.teleport(portal.getTarget());
 						}
-					}
 			}
 		}, Settings.portalRefreshTime(), 0);
 
-	}
-
-	public void onDisable() {
-	}
-
-	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-
-		if (cmd.getName().equalsIgnoreCase("PPortals"))
-		{
-			if (sender instanceof Player && sender.hasPermission("PortablePortals.Spawn"))
-			{
-				// Define "player" as the one who sent the command
-				Player player = (Player) sender;
-				player.getInventory().addItem(portal);
-			}
-
-		}
-		else
-			if (cmd.getName().equalsIgnoreCase("PReload"))
-			{
-				if ((sender instanceof Player && ((Player) sender).isOp()) || !(sender instanceof Player))
-					Files.reloadAll();
-
-			}
-		return true;
 	}
 
 }
