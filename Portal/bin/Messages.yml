@@ -5,6 +5,7 @@ Portals:
   No Target: '&dThe portal is missing a target location, so it''s unsure of where to target...'
   Left Click To: '&2&lLeft Click &ato set target.'
   Right Click To: '&6&lRight Click &eto open portal.'
+  Need Item: '&c&oYou do not have a <item>.'
 Action:
   Not Enough Room: '&5&lThe Portal isn''t balanced in this location!'
   Portal Opened: '&a&lThe Portal has opened!'

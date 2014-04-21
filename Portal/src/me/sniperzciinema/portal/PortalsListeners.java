@@ -67,21 +67,6 @@ public class PortalsListeners implements Listener {
 							if (e.getAction() == Action.LEFT_CLICK_BLOCK)
 							{
 
-								if ((player.getGameMode() != GameMode.CREATIVE) && Settings.isItemRequired())
-									if (player.getInventory().contains(Material.getMaterial(Settings.getItemRequired())))
-									{
-										for (ItemStack im : player.getInventory().getContents())
-											if (im.getTypeId() == Settings.getItemRequired())
-											{
-												if (im.getAmount() != 1)
-													im.setAmount(im.getAmount() - 1);
-												else
-													player.getInventory().remove(im);
-												break;
-											}
-									}
-									else
-										player.sendMessage(Msgs.Portals_NeedItem.getString(Material.getMaterial(Settings.getItemRequired()).name().toLowerCase()));
 								// Get Location, change into a string, set as
 								// item lore
 								Location loc = e.getClickedBlock().getLocation().clone().add(0.0, 1.0, 0.0);
@@ -117,66 +102,104 @@ public class PortalsListeners implements Listener {
 									// Save the location of the target
 									if (player.hasPermission("PortablePortals.Create"))
 									{
-										Location target = PortalManager.getTargetFromItem(e.getItem());
-
-										if (target == null)
+										if (hasItemRequired(player))
 										{
-											Random r = new Random();
-											int i = r.nextInt(2000) - 1000;
-											target = new Location(player.getWorld(), i,
-													player.getWorld().getHighestBlockYAt(i, i), i);
-											player.sendMessage(Msgs.Portals_NoTarget.getString());
-										}
-										// Remove portal from hand
-										final Portal portal = PortalManager.addPortal(e.getClickedBlock().getLocation(), target, e.getItem(), player);
 
-										if (e.getItem().getAmount() != 1)
-											e.getItem().setAmount(e.getItem().getAmount() - 1);
-										else
-											player.getInventory().remove(e.getItem());
+											Location target = PortalManager.getTargetFromItem(e.getItem());
 
-										player.updateInventory();
+											if (target == null)
+											{
+												Random r = new Random();
+												int i = r.nextInt(2000) - 1000;
+												target = new Location(player.getWorld(), i,
+														player.getWorld().getHighestBlockYAt(i, i),
+														i);
+												player.sendMessage(Msgs.Portals_NoTarget.getString());
+											}
+											// Remove portal from hand
+											final Portal portal = PortalManager.addPortal(e.getClickedBlock().getLocation(), target, e.getItem(), player);
 
-										player.getWorld().createExplosion(portal.getLocation(), 0.0F, false);
-
-										if (!portal.canCreatePortal())
-										{
-											player.sendMessage(Msgs.Portals_NotEnoughRoom.getString());
-
-											player.getInventory().addItem(portal.getItem());
+											if (e.getItem().getAmount() != 1)
+												e.getItem().setAmount(e.getItem().getAmount() - 1);
+											else
+												player.getInventory().remove(e.getItem());
 
 											player.updateInventory();
-											PortalManager.delPortal(portal);
 
-										}
-										else
-										{
+											player.getWorld().createExplosion(portal.getLocation(), 0.0F, false);
 
-											portal.createPortal();
+											if (!portal.canCreatePortal())
+											{
+												player.sendMessage(Msgs.Portals_NotEnoughRoom.getString());
 
-											player.sendMessage(Msgs.Portals_PortalOpened.getString());
+												player.getInventory().addItem(portal.getItem());
 
-											portal.playEffect();
+												player.updateInventory();
+												PortalManager.delPortal(portal);
 
-											// Timer to give portal item back
-											Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(PortablePortals.me, new Runnable()
+											}
+											else
 											{
 
-												@Override
-												public void run() {
-													player.getInventory().addItem(portal.getItem());
+												portal.createPortal();
 
-													player.sendMessage(Msgs.Portals_PortalClosed.getString());
-													portal.removePortal();
-													PortalManager.delPortal(portal);
-												}
-											}, Settings.stayOpenTime());
+												player.sendMessage(Msgs.Portals_PortalOpened.getString());
 
+												portal.playEffect();
+
+												// Timer to give portal item
+												// back
+												Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(PortablePortals.me, new Runnable()
+												{
+
+													@Override
+													public void run() {
+														player.getInventory().addItem(portal.getItem());
+
+														player.sendMessage(Msgs.Portals_PortalClosed.getString());
+														portal.removePortal();
+														PortalManager.delPortal(portal);
+													}
+												}, Settings.stayOpenTime());
+
+											}
 										}
+										else
+											player.sendMessage(Msgs.Portals_NeedItem.getString(Settings.getItemRequired().name().toLowerCase()));
+
 									}
 							e.setUseInteractedBlock(Result.DENY);
 							e.setUseItemInHand(Result.DENY);
 							e.setCancelled(true);
 						}
+	}
+
+	public boolean hasItemRequired(Player player) {
+		if (player.getGameMode() == GameMode.CREATIVE)
+			return true;
+		else
+			if (player.getInventory().contains(Settings.getItemRequired()))
+			{
+				int i = 0;
+				for (ItemStack im : player.getInventory().getContents())
+				{
+					if (im.getType() == Settings.getItemRequired())
+					{
+						break;
+					}
+					i++;
+				}
+
+				if (player.getInventory().getItem(i).getType() == Settings.getItemRequired())
+				{
+					ItemStack im = player.getInventory().getItem(i);
+					if (im.getAmount() != 1)
+						im.setAmount(im.getAmount() - 1);
+					else
+						player.getInventory().remove(im);
+					return true;
+				}
+			}
+		return false;
 	}
 }

@@ -66,18 +66,22 @@ public class Portal {
 		return false;
 	}
 
-	@SuppressWarnings("deprecation")
+	// @SuppressWarnings("deprecation")
 	public void createPortal() {
 		Location location2 = this.location.clone();
 		String d = Direction.getCardinalDirection(this.thrower);
 		if (d.contains("East") || d.contains("West"))
 		{
 			location2.getWorld().getBlockAt((int) location2.getX() - 1, (int) location2.getY(), (int) location2.getZ()).setType(Material.COBBLE_WALL);
-			location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ()).setType(Material.getMaterial(36));
+			// location2.getWorld().getBlockAt((int) location2.getX(), (int)
+			// location2.getY(), (int)
+			// location2.getZ()).setType(Material.getMaterial(36));
 			location2.getWorld().getBlockAt((int) location2.getX() + 1, (int) location2.getY(), (int) location2.getZ()).setType(Material.COBBLE_WALL);
 
 			location2.getWorld().getBlockAt((int) location2.getX() - 1, (int) location2.getY() + 1, (int) location2.getZ()).setType(Material.COBBLE_WALL);
-			location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 1, (int) location2.getZ()).setType(Material.getMaterial(36));
+			// location2.getWorld().getBlockAt((int) location2.getX(), (int)
+			// location2.getY() + 1, (int)
+			// location2.getZ()).setType(Material.getMaterial(36));
 			location2.getWorld().getBlockAt((int) location2.getX() + 1, (int) location2.getY() + 1, (int) location2.getZ()).setType(Material.COBBLE_WALL);
 
 			location2.getWorld().getBlockAt((int) location2.getX() - 1, (int) location2.getY() + 2, (int) location2.getZ()).setType(Material.STEP);
@@ -88,11 +92,15 @@ public class Portal {
 		{
 			this.direction = true;
 			location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ() - 1).setType(Material.COBBLE_WALL);
-			location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ()).setType(Material.getMaterial(36));
+			// location2.getWorld().getBlockAt((int) location2.getX(), (int)
+			// location2.getY(), (int)
+			// location2.getZ()).setType(Material.getMaterial(36));
 			location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY(), (int) location2.getZ() + 1).setType(Material.COBBLE_WALL);
 
 			location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 1, (int) location2.getZ() - 1).setType(Material.COBBLE_WALL);
-			location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 1, (int) location2.getZ()).setType(Material.getMaterial(36));
+			// location2.getWorld().getBlockAt((int) location2.getX(), (int)
+			// location2.getY() + 1, (int)
+			// location2.getZ()).setType(Material.getMaterial(36));
 			location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 1, (int) location2.getZ() + 1).setType(Material.COBBLE_WALL);
 
 			location2.getWorld().getBlockAt((int) location2.getX(), (int) location2.getY() + 2, (int) location2.getZ() - 1).setType(Material.STEP);

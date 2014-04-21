@@ -5,6 +5,6 @@ Check for new updates: false
 Portals:
   Stay Open Time: 10
   Check If In Portal Refresh Time: 1
-  Require Item To Use:
-    Enabled: false
-    ItemId:
+Require Item To Use:
+  Enabled: true
+  ItemId: 368

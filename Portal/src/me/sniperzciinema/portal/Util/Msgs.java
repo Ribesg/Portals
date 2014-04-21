@@ -8,7 +8,7 @@ public enum Msgs
 {
 
 	Portals_Title("Portals.Title", ""),
-	Portals_NeedItem("Portals.NeedItem", "<item>"),
+	Portals_NeedItem("Portals.Need Item", "<item>"),
 	Portals_LeftClickTo("Portals.Left Click To", ""),
 	Portals_RightClickTo("Portals.Right Click To", ""),
 	Portals_Target("Portals.Target", "<target>"),
